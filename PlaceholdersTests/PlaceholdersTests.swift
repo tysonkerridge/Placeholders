@@ -52,6 +52,13 @@ class PlaceholdersTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
+
+    func testShuffleCount() {
+        var test = [1, 2, 3, 4, 1, 2, 3, 4, 5, 6]
+        let count = test.count
+        test.shuffle()
+        XCTAssertTrue(count == test.count)
+    }
     
     func testREADME2() {
         let textField = UITextField()

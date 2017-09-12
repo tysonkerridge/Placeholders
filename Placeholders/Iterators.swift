@@ -37,7 +37,7 @@ public extension IteratorProtocol {
 
 // Inspired by Nate Cook: https://gist.github.com/natecook1000/0ac03efe07f647b46dae
 
-extension MutableCollection where Indices.Iterator.Element == Index {
+extension MutableCollection {
     
     /// Shuffles the contents of this collection.
     internal mutating func shuffle() {
