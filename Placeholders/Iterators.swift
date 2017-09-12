@@ -47,7 +47,7 @@ extension MutableCollection where Indices.Iterator.Element == Index {
             let distance: IndexDistance = numericCast(arc4random_uniform(numericCast(unshuffledCount)))
             guard distance != 0 else { continue }
             let i = index(firstUnshuffled, offsetBy: distance)
-            swap(&self[firstUnshuffled], &self[i])
+            self.swapAt(firstUnshuffled, i)
         }
     }
     
