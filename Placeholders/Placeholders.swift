@@ -21,10 +21,13 @@ public struct PlaceholdersOptions : OptionSet {
     
 }
 
+/// - Important: Using this object requires the `timer` to be invalidated when the object using it is done with it. You can do this by invalidating the `timer` or by calling `cleanUpTimer()` method in deinit of the object using/storing references to an instance of `Placeholders`.
 final public class Placeholders<Element> {
     
     public var iterator: AnyIterator<Element>
-    var timer: Timer?
+    var timer: Timer? {
+        didSet { oldValue?.invalidate() }
+    }
     var action: (Element) -> () = { _ in }
     
     /// Used to check if the first element should be skipped, for reasons where the first element might already be showing and we should skip it.
@@ -47,9 +50,15 @@ final public class Placeholders<Element> {
     }
     
     deinit {
-        timer?.invalidate()
+        // Nothing to do - we won't be deinitialized unless any active timer is invalidated
     }
     
+    /// Invalidates the timer if it's active.
+    /// - Important: This must be called by the object which is using the instance once it's done with it (eg. in that object's deinit method) otherwise the placeholder instance will not deallocate due to the timer still retaining the reference to the instance.
+    public func cleanUpTimer() {
+        timer?.invalidate()
+    }
+
     /// - Parameter shouldSkipFirstElement: A closure which sends the first placeholder to show, to decide whether it should be shown. Return `true` if the element passed is the same as the element already showing.
     public func start(interval: TimeInterval, fireInitial: Bool, shouldSkipFirstElement: ((Element) -> Bool)? = nil, action: @escaping (Element) -> ()) {
         self.shouldSkipFirstElement = shouldSkipFirstElement
